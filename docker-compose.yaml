@@ -1,0 +1,20 @@
+services:
+  pgvector:
+    image: ankane/pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: vector123
+    volumes:
+      - pgvectordata:/var/lib/postgresql/data
+
+  vectorizer:
+    image: guestros/langchain-vectorizer-webservice:latest
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PGVECTOR_URI=postgres:vector123@pgvector:5432/postgres
+
+volumes:
+  pgvectordata:

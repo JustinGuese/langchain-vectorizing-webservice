@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+
+  labels:
+    app: pgvector
+  name: pgvector
+  namespace: vectorator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgvector
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+
+      labels:
+        app: pgvector
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: vectorator-secrets
+          image: ankane/pgvector
+          name: pgvector
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pgvectordata
+      restartPolicy: Always
+      volumes:
+        - name: pgvectordata
+          persistentVolumeClaim:
+            claimName: pgvectordata

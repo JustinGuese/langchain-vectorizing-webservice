@@ -99,6 +99,15 @@ Response:
  guestros/langchain-vectorizer-webservice:latest
 
  see docker-compose.yml or `docker compose up`
+
+### kubernetes
+
+```
+kubectl apply -f kubernetes/vectorator-namespace.yaml
+kubectl create secret generic vectorator-secrets --from-literal=POSTGRES_PASSWORD=changeme23 --from-literal=OPENAI_API_KEY=sk-changeme -n vectorator
+kubectl apply -f kubernetes/
+
+```
  
 ### local
 
